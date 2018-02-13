@@ -11,7 +11,7 @@ class Capistrano::BundleRsync::Git < Capistrano::BundleRsync::SCM
     if File.exist?("#{config.local_mirror_path}/HEAD")
       info t(:mirror_exists, at: config.local_mirror_path)
     else
-      execute :git, :clone, '--mirror', repo_url, config.local_mirror_path
+      execute :git, :clone, '--mirror', '--config core.sharedRepository=0775', repo_url, config.local_mirror_path
     end
   end
 
@@ -31,7 +31,7 @@ class Capistrano::BundleRsync::Git < Capistrano::BundleRsync::SCM
         execute :git, :archive, fetch(:branch), tree, "| tar -x --strip-components #{num_components} -f - -C ", "#{config.local_release_path}"
       else
         execute :git, :archive, fetch(:branch), '| tar -x -C', "#{config.local_release_path}"
-      end      
+      end
     end
   end
 
